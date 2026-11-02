@@ -181,6 +181,57 @@ async def send_applicant_acknowledgement(
     return await send_email(to, subject, _wrap_html(body_html), text_body, attachments)
 
 
+# async def send_admin_notification(
+#     *,
+#     kind: str,
+#     reference: str,
+#     name: str,
+#     email: str,
+#     extra: dict,
+# ) -> Optional[str]:
+#     admin = _get_admin_inbox()
+#     if not admin:
+#         logger.info("[email] admin inbox not configured — skipping admin notification")
+#         return None
+#     label = "Access request" if kind == "access" else "Appointment request"
+#     safe_subject_reference = _validate_header_value(reference)
+#     safe_subject_name = _validate_header_value(name)
+
+#     subject = (
+#         f"{label} {safe_subject_reference} · "
+#         f"{safe_subject_name} — Maison Allélique"
+#     )
+#     safe_name = html.escape(name, quote=True)
+#     safe_email = html.escape(email, quote=True)
+#     safe_reference = html.escape(reference, quote=True)
+#     fields_html = "".join(
+#         f'<tr><td style="padding:6px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">{html.escape(str(k), quote=True)}</td>'
+#         f'<td style="padding:6px 0;color:#0A0A0A;">{html.escape(str(v), quote=True)}</td></tr>'
+#         for k, v in extra.items()
+#         if v
+#     )
+#     body_html = f"""
+#       <p style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#5C1A1B;margin:0 0 16px;">
+#         {label} · {safe_reference}
+#       </p>
+#       <p style="font-family:'Times New Roman',serif;font-style:italic;font-size:22px;color:#0A0A0A;margin:0 0 24px;">
+#         A new correspondent.
+#       </p>
+#       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top:1px solid rgba(10,10,10,0.15);">
+#         <tr><td style="padding:12px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">Name</td>
+#             <td style="padding:12px 0 6px;color:#0A0A0A;">{safe_name}</td></tr>
+#         <tr><td style="padding:6px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">Email</td>
+#             <td style="padding:6px 0;color:#0A0A0A;"><a href="mailto:{safe_email}" style="color:#0A0A0A;">{safe_email}</a></td></tr>
+#         {fields_html}
+#       </table>
+#     """
+#     text_lines = [f"{label} {reference}", f"Name: {name}", f"Email: {email}"]
+#     for k, v in extra.items():
+#         if v:
+#             text_lines.append(f"{k}: {v}")
+#     return await send_email(admin, subject, _wrap_html(body_html), "\n".join(text_lines))
+
+
 async def send_admin_notification(
     *,
     kind: str,
@@ -190,47 +241,98 @@ async def send_admin_notification(
     extra: dict,
 ) -> Optional[str]:
     admin = _get_admin_inbox()
-    if not admin:
-        logger.info("[email] admin inbox not configured — skipping admin notification")
-        return None
-    label = "Access request" if kind == "access" else "Appointment request"
-    safe_subject_reference = _validate_header_value(reference)
-    safe_subject_name = _validate_header_value(name)
 
-    subject = (
-        f"{label} {safe_subject_reference} · "
-        f"{safe_subject_name} — Maison Allélique"
-    )
-    safe_name = html.escape(name, quote=True)
-    safe_email = html.escape(email, quote=True)
-    safe_reference = html.escape(reference, quote=True)
+    if not admin:
+        logger.warning(
+            "[email] Admin inbox not configured — skipping notification"
+        )
+        return None
+
+    labels = {
+        "access": "Access request",
+        "appointment": "Appointment request",
+        "correspondence": "Correspondence subscription",
+        "gallery": "Gallery subscription",
+    }
+
+    label = labels.get(kind, "Website submission")
+
+    safe_reference = html.escape(str(reference), quote=True)
+    safe_name = html.escape(str(name), quote=True)
+    safe_email = html.escape(str(email), quote=True)
+
+    subject = f"{label} {reference} — Maison Allélique"
+
     fields_html = "".join(
-        f'<tr><td style="padding:6px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">{html.escape(str(k), quote=True)}</td>'
-        f'<td style="padding:6px 0;color:#0A0A0A;">{html.escape(str(v), quote=True)}</td></tr>'
-        for k, v in extra.items()
-        if v
+        (
+            '<tr>'
+            '<td style="padding:6px 12px 6px 0;'
+            'color:#6B6B6B;font-size:10px;'
+            'letter-spacing:0.28em;text-transform:uppercase;">'
+            f'{html.escape(str(key), quote=True)}'
+            '</td>'
+            '<td style="padding:6px 0;color:#0A0A0A;">'
+            f'{html.escape(str(value), quote=True)}'
+            '</td>'
+            '</tr>'
+        )
+        for key, value in extra.items()
+        if value
     )
+
     body_html = f"""
-      <p style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#5C1A1B;margin:0 0 16px;">
+      <p style="font-size:10px;letter-spacing:0.28em;
+      text-transform:uppercase;color:#5C1A1B;margin:0 0 16px;">
         {label} · {safe_reference}
       </p>
-      <p style="font-family:'Times New Roman',serif;font-style:italic;font-size:22px;color:#0A0A0A;margin:0 0 24px;">
-        A new correspondent.
+
+      <p style="font-family:'Times New Roman',serif;
+      font-style:italic;font-size:22px;color:#0A0A0A;margin:0 0 24px;">
+        A new submission.
       </p>
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top:1px solid rgba(10,10,10,0.15);">
-        <tr><td style="padding:12px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">Name</td>
-            <td style="padding:12px 0 6px;color:#0A0A0A;">{safe_name}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;color:#6B6B6B;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;">Email</td>
-            <td style="padding:6px 0;color:#0A0A0A;"><a href="mailto:{safe_email}" style="color:#0A0A0A;">{safe_email}</a></td></tr>
+
+      <table role="presentation" cellspacing="0" cellpadding="0"
+      border="0" width="100%"
+      style="border-top:1px solid rgba(10,10,10,0.15);">
+
+        <tr>
+          <td style="padding:12px 12px 6px 0;color:#6B6B6B;">
+            Name
+          </td>
+          <td style="padding:12px 0 6px;color:#0A0A0A;">
+            {safe_name}
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:6px 12px 6px 0;color:#6B6B6B;">
+            Email
+          </td>
+          <td style="padding:6px 0;color:#0A0A0A;">
+            <a href="mailto:{safe_email}">{safe_email}</a>
+          </td>
+        </tr>
+
         {fields_html}
       </table>
     """
-    text_lines = [f"{label} {reference}", f"Name: {name}", f"Email: {email}"]
-    for k, v in extra.items():
-        if v:
-            text_lines.append(f"{k}: {v}")
-    return await send_email(admin, subject, _wrap_html(body_html), "\n".join(text_lines))
 
+    text_lines = [
+        f"{label} {reference}",
+        f"Name: {name}",
+        f"Email: {email}",
+    ]
+
+    for key, value in extra.items():
+        if value:
+            text_lines.append(f"{key}: {value}")
+
+    return await send_email(
+        admin,
+        subject,
+        _wrap_html(body_html),
+        "\n".join(text_lines),
+    )
 
 async def send_subscriber_welcome(*, to: str) -> Optional[str]:
     subject = "Correspondance — occasional, considered"
@@ -247,3 +349,57 @@ async def send_subscriber_welcome(*, to: str) -> Optional[str]:
     """
     text_body = "Received.\n\nYou are on our correspondence. It is occasional, and considered.\n\n— Maison Allélique · Éditions Vivantes"
     return await send_email(to, subject, _wrap_html(body_html), text_body)
+
+
+async def send_gallery_welcome(
+    *,
+    to: str,
+    name: str,
+    city: str,
+    reference: str,
+) -> Optional[str]:
+    safe_name = html.escape(name, quote=True)
+    safe_city = html.escape(city.title(), quote=True)
+    safe_reference = html.escape(reference, quote=True)
+
+    subject = f"Gallery invitation {reference} — Maison Allélique"
+
+    body_html = f"""
+      <p style="font-family:'Times New Roman',serif;
+      font-style:italic;font-size:22px;color:#0A0A0A;margin:0 0 20px;">
+        Received, {safe_name}.
+      </p>
+
+      <p style="margin:0 0 20px;color:#0A0A0A;">
+        Your interest in our gallery has been recorded.
+        We will be in touch regarding future gallery invitations.
+      </p>
+
+      <p style="margin:0 0 12px;color:#6B6B6B;">
+        Preferred location: {safe_city}
+      </p>
+
+      <p style="margin:0 0 20px;color:#6B6B6B;">
+        Reference: {safe_reference}
+      </p>
+
+      <p style="margin:24px 0 0;color:#6B6B6B;font-size:12px;">
+        Maison Allélique · Éditions Vivantes
+      </p>
+    """
+
+    text_body = (
+        f"Received, {name}.\n\n"
+        "Your interest in our gallery has been recorded. "
+        "We will be in touch regarding future gallery invitations.\n\n"
+        f"Preferred location: {city.title()}\n"
+        f"Reference: {reference}\n\n"
+        "— Maison Allélique · Éditions Vivantes"
+    )
+
+    return await send_email(
+        to,
+        subject,
+        _wrap_html(body_html),
+        text_body,
+    )

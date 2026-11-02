@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import base64
-from typing import Literal,Coroutine,Any
+from typing import Literal
 import logging
 
 from deps import db, logger
@@ -18,8 +18,33 @@ Kind = Literal["access", "appointment"]
 
 _COLL_FOR = {"access": "access_requests", "appointment": "appointment_requests"}
 
+# def _log_task_result(
+#     task: asyncio.Task,
+#     *,
+#     task_name: str,
+#     doc_id: str,
+# ) -> None:
+#     """Retrieve background-task results so failures are not silently missed."""
+#     if task.cancelled():
+#         logger.warning(
+#             "Background task %s was cancelled for request %s",
+#             task_name,
+#             doc_id,
+#         )
+#         return
+
+#     exc = task.exception()
+#     if exc is not None:
+#         logger.error(
+#             "Background task %s failed for request %s: %s",
+#             task_name,
+#             doc_id,
+#             exc,
+#             exc_info=(type(exc), exc, exc.__traceback__),
+#         )
+
 def _log_task_result(
-    task: asyncio.Task,
+    task: asyncio.Future,
     *,
     task_name: str,
     doc_id: str,
@@ -44,31 +69,36 @@ def _log_task_result(
         )
 
 
-# def _schedule_task(
-#     coroutine: Coroutine[Any, Any, Any],
-#     *,
-#     task_name: str,
-#     doc_id: str,
-# ) -> asyncio.Task:
-#     """Schedule a task and make sure its result is observed."""
+# def _schedule_task(awaitable, *, task_name, doc_id):
 #     try:
-#         task = asyncio.create_task(coroutine)
-#     except Exception:
-#         coroutine.close()
-#         raise
+#         task = asyncio.ensure_future(awaitable)
 
-#     task.add_done_callback(
-#         lambda completed: _log_task_result(
-#             completed,
-#             task_name=task_name,
-#             doc_id=doc_id,
+#         if isinstance(task, asyncio.Task):
+#             task.set_name(task_name)
+
+#         task.add_done_callback(
+#             lambda completed: _log_task_result(
+#                 completed,
+#                 task_name=task_name,
+#                 doc_id=doc_id,
+#             )
 #         )
-#     )
-#     return task
 
-logger = logging.getLogger("maison")
+#         return task
+
+#     except Exception:
+#         if inspect.iscoroutine(awaitable):
+#             awaitable.close()
+
+#         logger.exception(
+#             "Could not schedule background task: %s for request %s",
+#             task_name,
+#             doc_id,
+#         )
+#         return None
 
 def _schedule_task(awaitable, *, task_name, doc_id):
+    """Schedule an async task and log its result."""
     try:
         task = asyncio.ensure_future(awaitable)
 
@@ -95,7 +125,20 @@ def _schedule_task(awaitable, *, task_name, doc_id):
             doc_id,
         )
         return None
-    
+
+def schedule_background_task(
+    awaitable,
+    *,
+    task_name: str,
+    doc_id: str,
+):
+    """Public helper for scheduling background email and notification tasks."""
+    return _schedule_task(
+        awaitable,
+        task_name=task_name,
+        doc_id=doc_id,
+    )
+
 async def _send_applicant_and_persist_id(
     *,
     coll_name: str,

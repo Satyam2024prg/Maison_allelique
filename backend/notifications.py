@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import base64
 from typing import Literal,Coroutine,Any
 
@@ -42,28 +43,48 @@ def _log_task_result(
         )
 
 
-def _schedule_task(
-    coroutine: Coroutine[Any, Any, Any],
-    *,
-    task_name: str,
-    doc_id: str,
-) -> asyncio.Task:
-    """Schedule a task and make sure its result is observed."""
+# def _schedule_task(
+#     coroutine: Coroutine[Any, Any, Any],
+#     *,
+#     task_name: str,
+#     doc_id: str,
+# ) -> asyncio.Task:
+#     """Schedule a task and make sure its result is observed."""
+#     try:
+#         task = asyncio.create_task(coroutine)
+#     except Exception:
+#         coroutine.close()
+#         raise
+
+#     task.add_done_callback(
+#         lambda completed: _log_task_result(
+#             completed,
+#             task_name=task_name,
+#             doc_id=doc_id,
+#         )
+#     )
+#     return task
+
+def _schedule_task(awaitable, *, name=None):
     try:
-        task = asyncio.create_task(coroutine)
-    except Exception:
-        coroutine.close()
-        raise
+        task = asyncio.ensure_future(awaitable)
 
-    task.add_done_callback(
-        lambda completed: _log_task_result(
-            completed,
-            task_name=task_name,
-            doc_id=doc_id,
+        if name and isinstance(task, asyncio.Task):
+            task.set_name(name)
+
+        task.add_done_callback(_log_task_result)
+        return task
+
+    except Exception as exc:
+        if inspect.iscoroutine(awaitable):
+            awaitable.close()
+
+        logger.exception(
+            "Could not schedule background task %s: %s",
+            name or "unnamed",
+            exc,
         )
-    )
-    return task
-
+        return None
 
 async def _send_applicant_and_persist_id(
     *,

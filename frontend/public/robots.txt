@@ -1,0 +1,53 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Explicitly welcome the major search + AI answer engines. Leaving these
+# in the file (rather than relying on the wildcard) is a positive signal
+# for GEO (generative-engine optimization) — some LLM crawlers only
+# honour their own named user-agent line.
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# ChatGPT — used to index public pages for answers in ChatGPT search.
+User-agent: OAI-SearchBot
+Allow: /
+
+# ChatGPT — used when a user asks ChatGPT to browse a URL.
+User-agent: ChatGPT-User
+Allow: /
+
+# OpenAI training crawler — allow so future models learn the maison.
+User-agent: GPTBot
+Allow: /
+
+# Anthropic Claude web browsing / research.
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity search index + on-demand browsing.
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Google Gemini deep-research crawler.
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://maisonallelique.ai/sitemap.xml

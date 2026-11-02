@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#F4F1EA" />
+
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TLXPZ2NB');</script>
+        <!-- End Google Tag Manager -->
+        <meta name="description" content="Maison Allélique — a Parisian niche perfume maison at the intersection of biology and new technologies. Bespoke fragrance layering with Allelium, a private AI. Éditions Vivantes. By appointment." />
+
+        <!-- Brand mark — the radial starburst, in SVG so it scales cleanly. -->
+        <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.svg" />
+        <link rel="mask-icon" href="%PUBLIC_URL%/favicon.svg" color="#0A0A0A" />
+
+        <!-- ────────────────────────────────────────────────────────────── -->
+        <!-- SEARCH-ENGINE OWNERSHIP VERIFICATION                            -->
+        <!-- Paste the token you receive from each console below, then      -->
+        <!-- redeploy. Leaving them empty is safe (crawlers just skip).     -->
+        <!--                                                                 -->
+        <!-- Google Search Console → https://search.google.com/search-console -->
+        <meta name="google-site-verification" content="" />
+        <!-- Bing Webmaster Tools → https://www.bing.com/webmasters          -->
+        <meta name="msvalidate.01" content="" />
+        <!-- Yandex Webmaster (optional) → https://webmaster.yandex.com      -->
+        <meta name="yandex-verification" content="" />
+        <!-- ────────────────────────────────────────────────────────────── -->
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://maisonallelique.ai/#organization",
+              "name": "Maison Allélique",
+              "alternateName": "Allélique",
+              "url": "https://maisonallelique.ai",
+              "logo": "https://maisonallelique.ai/og-default.jpg",
+              "description": "Parisian niche perfume maison composing bespoke fragrances, bio-responsive skincare and collectible ritual objects. Éditions Vivantes — numbered, personal, never repeated.",
+              "contactPoint": [
+                { "@type": "ContactPoint", "email": "touch@maisonallelique.ai", "contactType": "customer service", "availableLanguage": ["English","French","Spanish"] },
+                { "@type": "ContactPoint", "email": "press@maisonallelique.ai", "contactType": "press" }
+              ],
+              "knowsAbout": ["niche perfume","bespoke fragrance","fragrance layering","haute parfumerie","bio-responsive skincare","Parisian perfume house","parfum sur mesure","perfume AI","biotechnology beauty","epigenetics beauty","intelligent luxury"]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://maisonallelique.ai/#website",
+              "url": "https://maisonallelique.ai",
+              "name": "Maison Allélique",
+              "inLanguage": ["en","fr","es"],
+              "publisher": { "@id": "https://maisonallelique.ai/#organization" }
+            },
+            {
+              "@type": "Brand",
+              "@id": "https://maisonallelique.ai/#brand",
+              "name": "Maison Allélique",
+              "slogan": "Éditions Vivantes — the planet, speaking in silence."
+            }
+          ]
+        }
+        </script>
+        <!--
+        manifest.json provides metadata used when your web app is installed on a
+        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+        -->
+        <!--
+        Notice the use of %PUBLIC_URL% in the tags above.
+        It will be replaced with the URL of the `public` folder during the build.
+        Only files inside the `public` folder can be referenced from the HTML.
+
+        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+        work correctly both with client-side routing and a non-root public URL.
+        Learn how to configure a non-root public URL by running `npm run build`.
+        -->
+        <title>Maison Allélique · Éditions Vivantes</title>
+        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+        <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
+    </head>
+    <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TLXPZ2NB"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root"></div>
+        <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+                <script>
+            !(function (t, e) {
+                var o, n, p, r;
+                e.__SV ||
+                    ((window.posthog = e),
+                    (e._i = []),
+                    (e.init = function (i, s, a) {
+                        function g(t, e) {
+                            var o = e.split(".");
+                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
+                                (t[e] = function () {
+                                    t.push(
+                                        [e].concat(
+                                            Array.prototype.slice.call(
+                                                arguments,
+                                                0,
+                                            ),
+                                        ),
+                                    );
+                                });
+                        }
+                        ((p = t.createElement("script")).type =
+                            "text/javascript"),
+                            (p.crossOrigin = "anonymous"),
+                            (p.async = !0),
+                            (p.src =
+                                s.api_host.replace(
+                                    ".i.posthog.com",
+                                    "-assets.i.posthog.com",
+                                ) + "/static/array.js"),
+                            (r =
+                                t.getElementsByTagName(
+                                    "script",
+                                )[0]).parentNode.insertBefore(p, r);
+                        var u = e;
+                        for (
+                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
+                                u.people = u.people || [],
+                                u.toString = function (t) {
+                                    var e = "posthog";
+                                    return (
+                                        "posthog" !== a && (e += "." + a),
+                                        t || (e += " (stub)"),
+                                        e
+                                    );
+                                },
+                                u.people.toString = function () {
+                                    return u.toString(1) + ".people (stub)";
+                                },
+                                o =
+                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
+                                        " ",
+                                    ),
+                                n = 0;
+                            n < o.length;
+                            n++
+                        )
+                            g(u, o[n]);
+                        e._i.push([i, s, a]);
+                    }),
+                    (e.__SV = 1));
+            })(document, window.posthog || []);
+            posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
+                api_host: "https://us.i.posthog.com",
+                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
+                session_recording: {
+                    recordCrossOriginIframes: true,
+                    capturePerformance: false,
+                },
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,279 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Maison Allélique — design tokens ──────────────────────────── */
+:root {
+    --encre: #050505; /* primary text, marks, dark sections */
+    --os: #f4f1ea; /* the page itself */
+    --cendre: #3a3a3a; /* captions, notation, secondary text */
+    --sang: #4a1213; /* accent/seal — one mark per view */
+
+    /* Shadcn compatibility (unused but preserved) */
+    --background: 42 27% 94%;
+    --foreground: 0 0% 4%;
+    --card: 42 27% 94%;
+    --card-foreground: 0 0% 4%;
+    --popover: 42 27% 94%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 0 0% 4%;
+    --primary-foreground: 42 27% 94%;
+    --secondary: 42 15% 88%;
+    --secondary-foreground: 0 0% 4%;
+    --muted: 42 15% 88%;
+    --muted-foreground: 0 0% 42%;
+    --accent: 359 55% 23%;
+    --accent-foreground: 42 27% 94%;
+    --destructive: 359 55% 23%;
+    --destructive-foreground: 42 27% 94%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 0 0% 4%;
+    --radius: 0px;
+}
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+}
+
+html,
+body,
+#root {
+    background: var(--os);
+    color: var(--encre);
+    font-family:
+        "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.005em;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* subtle grain */
+    background-image:
+        radial-gradient(
+            rgba(10, 10, 10, 0.015) 1px,
+            transparent 1px
+        );
+    background-size: 3px 3px;
+}
+
+::selection {
+    background: var(--encre);
+    color: var(--os);
+}
+
+.font-display {
+    font-family: "Cormorant Garamond", "Times New Roman", serif;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+}
+
+.font-italic-display {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+}
+
+/* Tracked-small-caps utility — labels, notation */
+.tracked {
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--cendre);
+    font-weight: 400;
+}
+
+@media (min-width: 768px) {
+    .tracked {
+        font-size: 11px;
+        letter-spacing: 0.32em;
+    }
+}
+
+.tracked-ink {
+    color: var(--encre);
+}
+
+.tracked-sang {
+    color: var(--sang);
+}
+
+/* Quiet editorial link */
+.quiet-link {
+    color: var(--encre);
+    display: inline-block;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition:
+        border-color 700ms ease-out,
+        opacity 700ms ease-out;
+    cursor: pointer;
+}
+.quiet-link:hover {
+    border-bottom-color: var(--encre);
+}
+.quiet-link-sang {
+    color: var(--sang);
+}
+.quiet-link-sang:hover {
+    border-bottom-color: var(--sang);
+}
+
+/* Minimal input — bottom border only */
+.field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--encre);
+    padding: 12px 0;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--encre);
+    width: 100%;
+    outline: none;
+    transition: border-color 500ms ease-out;
+    border-radius: 0;
+}
+.field::placeholder {
+    color: var(--cendre);
+    font-weight: 300;
+}
+.field:focus {
+    border-bottom-color: var(--sang);
+}
+textarea.field {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Slow fade utility */
+.fade-in {
+    animation: fadeIn 1200ms ease-out both;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hero world crossfade */
+.world-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1600ms ease-out;
+    will-change: opacity;
+}
+.world-layer.is-active {
+    opacity: 1;
+}
+
+/* Radial mark slow breath */
+.radial-breath {
+    animation: breath 12s ease-in-out infinite;
+    transform-origin: center;
+}
+@keyframes breath {
+    0%,
+    100% {
+        opacity: 0.85;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Bone placeholder */
+.bone-placeholder {
+    background: linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.04) 0%,
+        rgba(10, 10, 10, 0.02) 100%
+    );
+    border: 1px solid rgba(10, 10, 10, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+.bone-placeholder::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(
+            45deg,
+            transparent 0 20px,
+            rgba(10, 10, 10, 0.02) 20px 21px
+        );
+    pointer-events: none;
+}
+
+/* Kintsugi seam accent */
+.kintsugi-seam {
+    position: relative;
+}
+.kintsugi-seam::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--sang) 20%,
+        var(--sang) 80%,
+        transparent
+    );
+}
+
+/* Vertical rule accent */
+.hairline {
+    height: 1px;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.15);
+}
+
+.hairline-vertical {
+    width: 1px;
+    height: 40px;
+    background: rgba(10, 10, 10, 0.4);
+    margin: 0 auto;
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    .radial-breath {
+        animation: none;
+    }
+}
+
+/* Utility text sizes with restraint */
+.editorial-eyebrow {
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--cendre);
+}

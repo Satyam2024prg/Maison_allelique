@@ -1,0 +1,199 @@
+{
+  "theme": "Light",
+  "archetype": "5 (Luxury) merged with 1 (Organic & Earthy)",
+  "global_design_philosophy": "SILENCE — the object speaks, the brand does not shout. Restraint, vast negative space, quiet precision.",
+  "colors": {
+    "encre": "#0A0A0A",
+    "os": "#F4F1EA",
+    "cendre": "#6B6B6B",
+    "sang": "#5C1A1B",
+    "mapping": {
+      "background": "var(--os)",
+      "primary_text": "var(--encre)",
+      "secondary_text": "var(--cendre)",
+      "accent": "var(--sang)",
+      "border": "var(--encre)"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Cormorant Garamond",
+      "import_url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,500&display=swap",
+      "usage": "Editorial titles, house name ('Allélique' ALWAYS set in italic)."
+    },
+    "body": {
+      "family": "Inter, Helvetica Neue, sans-serif",
+      "import_url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap",
+      "usage": "Body text, UI elements, small notations. Small size on wide margins."
+    }
+  },
+  "motion": {
+    "speed": "duration-700 to duration-1000",
+    "easing": "ease-out",
+    "rules": [
+      "Unhurried. Slow eased fades.",
+      "Gentle parallax only.",
+      "NO bounce.",
+      "NO fast carousels.",
+      "NO autoplay.",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+  "components": {
+    "TrackedCaps": {
+      "classes": "font-sans text-[10px] md:text-xs tracking-[0.3em] uppercase text-cendre",
+      "description": "Used for labels, notations (e.g. N° 053), and minor navigation."
+    },
+    "EditorialWrapper": {
+      "classes": "min-h-screen w-full flex flex-col justify-center items-center px-6 md:px-24 max-w-4xl mx-auto text-center gap-12",
+      "description": "Provides the vast negative space. One idea per screen."
+    },
+    "QuietLink": {
+      "classes": "inline-block border-b border-transparent hover:border-encre transition-colors duration-700 ease-out text-encre cursor-pointer pb-1",
+      "description": "Used instead of loud buttons."
+    },
+    "SangSeal": {
+      "classes": "w-2 h-2 rounded-full bg-sang mx-auto flex-shrink-0",
+      "description": "A single --sang accent per view. Can be a literal dot or part of a mark."
+    },
+    "RadialMark": {
+      "description": "Thin-line radial living-system mark. Two concentric rings, central node, radiating lines. Inline SVG, stroke-width: 0.5px, stroke: var(--encre), fill: none."
+    },
+    "Form": {
+      "description": "Forms use mailto action. No backend. Extremely minimal text inputs. Bottom border only, no bounding box. Focus state slightly thickens bottom border. Font: Inter."
+    }
+  },
+  "images": [
+    {
+      "category": "Hero / Worlds Overview",
+      "url": "https://images.pexels.com/photos/14157610/pexels-photo-14157610.jpeg",
+      "description": "Warm sunlight casting shadows on a beige wall. Used to represent 'The Host' essence."
+    },
+    {
+      "category": "The Master",
+      "url": "https://images.unsplash.com/photo-1572725350945-a2d24faa89b0",
+      "description": "Selective focus on white ceramic texture. Represents wabi-sabi, material mastery."
+    },
+    {
+      "category": "The Observer",
+      "url": "https://images.pexels.com/photos/32822338/pexels-photo-32822338.jpeg",
+      "description": "Rock in rippled water, black and white texture effect. Represents the scholar stone, monochrome."
+    },
+    {
+      "category": "Editions / Parfum",
+      "url": "https://images.unsplash.com/photo-1608721279136-cd41b752fa41",
+      "description": "Clear luxury glass perfume bottle, minimalist lighting. Represents the 'Grail' concept."
+    },
+    {
+      "category": "Editions / Skincare",
+      "url": "https://images.unsplash.com/photo-1718466044521-d38654f3ba0a",
+      "description": "Group of minimal bottles in dramatic shadow. Represents bio-responsive skincare."
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "component_name": "Home",
+      "layout": "Full-viewport hero slowly rotating the three worlds (breath pace: 8-12s per world, 1500ms cross-fade). Minimal overlay: Radial mark, 'Maison Allélique', essence line, quiet scroll cue. Below hero: one screen stating 'We do not sell products. We compose ceremonies.' Vast space. Three restrained doorways to the worlds."
+    },
+    {
+      "path": "/maison",
+      "component_name": "Maison",
+      "layout": "Vast space. Editorial introduction to the brand. One sentence per scroll block."
+    },
+    {
+      "path": "/values",
+      "component_name": "Values",
+      "layout": "Four values + four traits as an editorial spread. Large title, one precise line each. Enormous space. 'N° 01–04' tracked-caps notation. Manifesto, not a feature list."
+    },
+    {
+      "path": "/worlds",
+      "component_name": "WorldsOverview",
+      "layout": "Index of the three lenses: The Host, The Master, The Observer. Quiet doorways."
+    },
+    {
+      "path": "/worlds/host",
+      "component_name": "WorldHost",
+      "layout": "Warm sand tones. Ritual, generosity, presence. 'The pour is short. A quarter cup means stay.' Mashrabiya geometry hints."
+    },
+    {
+      "path": "/worlds/master",
+      "component_name": "WorldMaster",
+      "layout": "Material, mastery. 'The form is not designed. It is grown.' Kintsugi, raku, timber lattice. Cinnabar (--sang) seam accent."
+    },
+    {
+      "path": "/worlds/observer",
+      "component_name": "WorldObserver",
+      "layout": "Restraint, recognition. 'Nature creates. We recognise.' Monochrome + a single --sang seal. Scholar stone imagery."
+    },
+    {
+      "path": "/editions",
+      "component_name": "EditionsOverview",
+      "layout": "One collection in three forms. Gallery narrative."
+    },
+    {
+      "path": "/editions/parfum",
+      "component_name": "EditionParfum",
+      "layout": "Personalised niche fragrance. Numbered editions (N° 0XX). Olfactory notes as gallery text. NO shop grid. Quiet route: Book Consultation."
+    },
+    {
+      "path": "/editions/skincare",
+      "component_name": "EditionSkincare",
+      "layout": "Bio-responsive. Text-focused, highly clinical yet poetic. Quiet route: Request Access."
+    },
+    {
+      "path": "/editions/ecosystem",
+      "component_name": "EditionEcosystem",
+      "layout": "Collectible objects. Quiet route: Request Access."
+    },
+    {
+      "path": "/provenance",
+      "component_name": "Provenance",
+      "layout": "Materials, traceability as trust cues. Naming raw materials like a museum exhibit."
+    },
+    {
+      "path": "/access",
+      "component_name": "Access",
+      "layout": "Application form (invitation-framed). 'Our editions are limited and personal. Access begins with an introduction.' mailto integration."
+    },
+    {
+      "path": "/appointment",
+      "component_name": "Appointment",
+      "layout": "Book a Private Consultation. Form capturing intent for Paris in-person or private video. mailto integration."
+    },
+    {
+      "path": "/contact",
+      "component_name": "Contact",
+      "layout": "Press line: press@maisonallelique.com. Contact: contact@maisonallelique.com. Vast space."
+    }
+  ],
+  "layout_elements": {
+    "header": "Tiny, quiet top nav. Radial mark + up to five words (Maison, Worlds, Editions, Provenance, Access). 'Access' is accented (perhaps slightly darker encre or italic). Transparent background over hero, solid --os elsewhere.",
+    "footer": "Every page. Radial mark, tiny nav, legal block: 'Responsible Person — Melissa SASU, 29 Rue d'Artois, 75008 Paris, France' + Privacy, Cookies, Terms. One discreet line."
+  },
+  "accessibility": {
+    "contrast": "Use --encre for essential text against --os background to ensure WCAG AA/AAA. --cendre is strictly for non-essential/secondary notation.",
+    "keyboard": "Full keyboard nav required. Focus states should be a subtle 1px border of --encre.",
+    "motion": "Wrap animations in prefers-reduced-motion media queries to disable breathing/parallax if requested."
+  },
+  "anti_patterns": [
+    "NO e-commerce, NO cart, NO prices.",
+    "NO pop-ups, countdowns, or urgency signals.",
+    "NO autoplay audio or fast carousels.",
+    "NO flags or tricolour.",
+    "NO 'Shop now', 'Buy', 'Sale', or 'Sign up!' buttons.",
+    "NO crammed grids. Do not place multiple ideas on one screen viewport.",
+    "NO heavy gradients or shadows.",
+    "NO more than ONE --sang accent per view.",
+    "NO smiling stock models. Photography must be atmospheric materials/light.",
+    "NO generic sans-serif for headings (Must use Cormorant Garamond)."
+  ],
+  "testing_attributes": {
+    "rules": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case, role-based.",
+    "examples": [
+      "data-testid='nav-link-access'",
+      "data-testid='form-submit-access'",
+      "data-testid='footer-legal-text'"
+    ]
+  }
+}

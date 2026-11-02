@@ -5,6 +5,7 @@ import asyncio
 import inspect
 import base64
 from typing import Literal,Coroutine,Any
+import logging
 
 from deps import db, logger
 from email_service import (
@@ -65,27 +66,36 @@ def _log_task_result(
 #     )
 #     return task
 
-def _schedule_task(awaitable, *, name=None):
+logger = logging.getLogger("maison")
+
+def _schedule_task(awaitable, *, task_name, doc_id):
     try:
         task = asyncio.ensure_future(awaitable)
 
-        if name and isinstance(task, asyncio.Task):
-            task.set_name(name)
+        if isinstance(task, asyncio.Task):
+            task.set_name(task_name)
 
-        task.add_done_callback(_log_task_result)
+        task.add_done_callback(
+            lambda completed: _log_task_result(
+                completed,
+                task_name=task_name,
+                doc_id=doc_id,
+            )
+        )
+
         return task
 
-    except Exception as exc:
+    except Exception:
         if inspect.iscoroutine(awaitable):
             awaitable.close()
 
         logger.exception(
-            "Could not schedule background task %s: %s",
-            name or "unnamed",
-            exc,
+            "Could not schedule background task: %s for request %s",
+            task_name,
+            doc_id,
         )
         return None
-
+    
 async def _send_applicant_and_persist_id(
     *,
     coll_name: str,

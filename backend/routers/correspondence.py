@@ -27,11 +27,48 @@ async def create_subscriber(payload: SubscriberCreate) -> SubmitResponse:
 
     existing = await db.subscribers.find_one({"email": email})
 
+    now = datetime.now(timezone.utc).isoformat()
+
     if existing:
+        doc_id = existing["id"]
+
+        await db.subscribers.update_one(
+            {"email": email},
+            {
+                "$set": {
+                    "last_subscribed_at": now,
+                },
+                "$inc": {
+                    "subscription_count": 1,
+                },
+            },
+        )
+
+        schedule_background_task(
+            send_subscriber_welcome(to=email),
+            task_name="Correspondence subscriber confirmation",
+            doc_id=doc_id,
+        )
+
+        schedule_background_task(
+            send_admin_notification(
+                kind="correspondence",
+                reference=doc_id[:8].upper(),
+                name="Returning correspondence subscriber",
+                email=email,
+                extra={
+                    "Submission type": "Repeat correspondence subscription",
+                    "Resubscribed at": now,
+                },
+            ),
+            task_name="Correspondence admin notification",
+            doc_id=doc_id,
+        )
+
         return SubmitResponse(
-            id=existing["id"],
+            id=doc_id,
             reference=existing.get("reference", ""),
-            message="Already on our correspondence.",
+            message="Your correspondence subscription has been refreshed.",
         )
 
     doc_id = str(uuid.uuid4())

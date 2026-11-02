@@ -60,14 +60,32 @@ def test_correspondence_new_email():
     assert "reference" in body
 
 
-def test_correspondence_duplicate_returns_already():
-    email = "TEST_iter4_dup@example.com"
-    r1 = requests.post(f"{API}/correspondence", json={"email": email}, timeout=10)
-    assert r1.status_code in (200, 201)
-    r2 = requests.post(f"{API}/correspondence", json={"email": email}, timeout=10)
-    assert r2.status_code in (200, 201)
-    assert "Already on our correspondence" in r2.json()["message"]
+# def test_correspondence_duplicate_returns_already():
+#     email = "TEST_iter4_dup@example.com"
+#     r1 = requests.post(f"{API}/correspondence", json={"email": email}, timeout=10)
+#     assert r1.status_code in (200, 201)
+#     r2 = requests.post(f"{API}/correspondence", json={"email": email}, timeout=10)
+#     assert r2.status_code in (200, 201)
+#     assert "Already on our correspondence" in r2.json()["message"]
 
+def test_correspondence_duplicate_refreshes_subscription():
+    email = "TEST_iter4_dup@example.com"
+
+    r1 = requests.post(
+        f"{API}/correspondence",
+        json={"email": email},
+        timeout=10,
+    )
+    assert r1.status_code in (200, 201)
+
+    r2 = requests.post(
+        f"{API}/correspondence",
+        json={"email": email},
+        timeout=10,
+    )
+    assert r2.status_code in (200, 201)
+
+    assert "refreshed" in r2.json()["message"].lower()
 
 def test_correspondence_invalid_email_422():
     r = requests.post(f"{API}/correspondence", json={"email": "notanemail"}, timeout=10)

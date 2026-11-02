@@ -74,10 +74,18 @@ async def create_subscriber(payload: SubscriberCreate) -> SubmitResponse:
     doc_id = str(uuid.uuid4())
     created_at = datetime.now(timezone.utc).isoformat()
 
+    # doc = {
+    #     "id": doc_id,
+    #     "email": email,
+    #     "created_at": created_at,
+    # }
+
     doc = {
         "id": doc_id,
         "email": email,
         "created_at": created_at,
+        "last_subscribed_at": created_at,
+        "subscription_count": 1,
     }
 
     await db.subscribers.insert_one(doc)

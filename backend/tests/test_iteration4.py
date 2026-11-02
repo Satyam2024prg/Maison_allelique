@@ -86,7 +86,6 @@ def test_correspondence_duplicate_refreshes_subscription():
     assert r2.status_code in (200, 201)
 
     assert "refreshed" in r2.json()["message"].lower()
-
 def test_correspondence_invalid_email_422():
     r = requests.post(f"{API}/correspondence", json={"email": "notanemail"}, timeout=10)
     assert r.status_code == 422

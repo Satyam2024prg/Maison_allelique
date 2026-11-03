@@ -55,13 +55,10 @@ def _send_sync(
     api_key = _get_api_key()
     attachment_list = list(attachments) if attachments else []
     if not api_key or resend is None:
-        logger.info(
-            "[email/console-mode] to=%s subject=%r attachments=%d",
-            to,
-            subject,
+        logger.warning(
+            "[email/console-mode] Email not sent. attachments=%d",
             len(attachment_list),
         )
-        logger.debug("[email/console-mode] body:\n%s", text)
         return None
 
     resend.api_key = api_key
@@ -77,8 +74,8 @@ def _send_sync(
     try:
         result = resend.Emails.send(params)
         return (result or {}).get("id")
-    except Exception as exc:  # noqa: BLE001
-        logger.error("[email] Resend send failed: %s", exc)
+    except Exception:
+        logger.error("[email] Resend send failed.")
         return None
 
 
@@ -261,7 +258,8 @@ async def send_admin_notification(
     safe_name = html.escape(str(name), quote=True)
     safe_email = html.escape(str(email), quote=True)
 
-    subject = f"{label} {reference} — Maison Allélique"
+    safe_subject_reference = _validate_header_value(str(reference))
+    subject = f"{label} {safe_subject_reference} — Maison Allélique"
 
     fields_html = "".join(
         (
@@ -362,7 +360,8 @@ async def send_gallery_welcome(
     safe_city = html.escape(city.title(), quote=True)
     safe_reference = html.escape(reference, quote=True)
 
-    subject = f"Gallery invitation {reference} — Maison Allélique"
+    safe_subject_reference = _validate_header_value(str(reference))
+    subject = f"Gallery invitation {safe_subject_reference} — Maison Allélique"
 
     body_html = f"""
       <p style="font-family:'Times New Roman',serif;

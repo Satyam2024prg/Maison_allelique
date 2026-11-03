@@ -37,44 +37,6 @@ _ACCEPTED = {
 }
 
 
-# def _verify_signature(
-#     body: bytes,
-#     svix_id: Optional[str],
-#     svix_timestamp: Optional[str],
-#     svix_signature: Optional[str],
-# ) -> None:
-#     """Best-effort signature check.
-
-#     If the secret isn't set, we accept the request (dev mode). If it IS set,
-#     we require all svix headers to be present and delegate to the ``svix``
-#     library. If ``svix`` is not installed, we log and fail closed.
-#     """
-#     secret = os.environ.get("RESEND_WEBHOOK_SECRET", "").strip()
-#     if not secret:
-#         logger.info("[webhooks/resend] no secret configured — accepting unsigned event")
-#         return
-#     if not (svix_id and svix_timestamp and svix_signature):
-#         raise HTTPException(status_code=401, detail="Missing signature headers")
-#     try:
-#         from svix.webhooks import Webhook, WebhookVerificationError  # type: ignore
-#     except Exception:
-#         logger.error("[webhooks/resend] svix library missing; cannot verify signature")
-#         raise HTTPException(status_code=500, detail="Verification library unavailable")
-#     try:
-#         Webhook(secret).verify(
-#             body,
-#             {
-#                 "svix-id": svix_id,
-#                 "svix-timestamp": svix_timestamp,
-#                 "svix-signature": svix_signature,
-#             },
-#         )
-#     except WebhookVerificationError as exc:
-#         logger.warning("[webhooks/resend] invalid signature: %s", exc)
-#         raise HTTPException(status_code=401, detail="Invalid signature")
-
-
-
 def _verify_signature(
     body: bytes,
     svix_id: Optional[str],
@@ -198,6 +160,20 @@ async def _stamp_request(
         if result.modified_count:
             return coll_name
 
+        existing = await db[coll_name].find_one(
+            {"applicant_email_id": email_id},
+            {"_id": 1, "delivery_history.event_id": 1},
+        )
+
+        if existing:
+            processed_ids = {
+                item.get("event_id")
+                for item in existing.get("delivery_history", [])
+            }
+
+            if event_id in processed_ids:
+                return f"{coll_name} (duplicate)"
+
     return None
 
 
@@ -237,14 +213,16 @@ async def resend_webhook(
         return Response(status_code=400)
 
     updated = await _stamp_request(email_id, status, svix_id)
-    if updated:
+
+    if updated and updated.endswith("(duplicate)"):
+        logger.info("[webhooks/resend] duplicate event ignored")
+    elif updated:
         logger.info(
-            "[webhooks/resend] %s → %s (id=%s)", updated, status, email_id
+            "[webhooks/resend] %s → %s", updated, status
         )
     else:
         logger.info(
-            "[webhooks/resend] no request matched email id=%s (event=%s)",
-            email_id,
+            "[webhooks/resend] no request matched (event=%s)",
             event_type,
         )
     return Response(status_code=204)
